@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lightweight-coscheduler
+  labels:
+    app: lightweight-coscheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lightweight-coscheduler
+  template:
+    metadata:
+      labels:
+        app: lightweight-coscheduler
+    spec:
+      serviceAccount: lightweight-coscheduler
+      containers:
+        - name: lightweight-coscheduler
+          image: rbdai/lightweight-coscheduler
+        ### prebuilt-image doesn't seem to work.
+        ### (see https://github.com/kubernetes-sigs/scheduler-plugins)
+        # image: k8s.gcr.io/scheduler-plugins/kube-scheduler:v0.18.9
+          imagePullPolicy: Always
+          command:
+            - "kube-scheduler"
+            - "--scheduler-name=lightweight-coscheduler"
+            - "--leader-elect=false"
+
+           ### Can't get this v1alpha2 config file to work...
+           #- "--config=/etc/config/scheduler_config.yaml"
+          volumeMounts:
+          - name: scheduler-config-volume
+            mountPath: /etc/config
+      volumes:
+        - name: scheduler-config-volume
+          configMap:
+            name: scheduler-config

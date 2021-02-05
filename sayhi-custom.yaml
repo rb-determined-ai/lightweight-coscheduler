@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sayhi-custom
+spec:
+  schedulerName: lightweight-coscheduler
+  containers:
+    - name: app
+      image: alpine
+      command: ["/bin/echo", "hi"]
