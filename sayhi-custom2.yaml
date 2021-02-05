@@ -1,7 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: sayhi-custom
+  name: sayhi-custom2
+  labels:
+    pod-group.scheduling.sigs.k8s.io/name: say-hi-pod-group
+    pod-group.scheduling.sigs.k8s.io/min-available: "2"
 spec:
   schedulerName: lightweight-coscheduler
   containers:

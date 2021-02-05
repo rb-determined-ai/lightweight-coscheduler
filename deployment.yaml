@@ -17,18 +17,19 @@ spec:
       serviceAccount: lightweight-coscheduler
       containers:
         - name: lightweight-coscheduler
-          image: rbdai/lightweight-coscheduler
+        # image: rbdai/lightweight-coscheduler
         ### prebuilt-image doesn't seem to work.
         ### (see https://github.com/kubernetes-sigs/scheduler-plugins)
-        # image: k8s.gcr.io/scheduler-plugins/kube-scheduler:v0.18.9
+          image: k8s.gcr.io/scheduler-plugins/kube-scheduler:v0.18.9
           imagePullPolicy: Always
           command:
             - "kube-scheduler"
+            - "-v=7"
             - "--scheduler-name=lightweight-coscheduler"
             - "--leader-elect=false"
 
            ### Can't get this v1alpha2 config file to work...
-           #- "--config=/etc/config/scheduler_config.yaml"
+            - "--config=/etc/config/scheduler_config.yaml"
           volumeMounts:
           - name: scheduler-config-volume
             mountPath: /etc/config

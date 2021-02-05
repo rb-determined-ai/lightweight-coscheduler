@@ -19,12 +19,9 @@ kubectl apply -f rbac.yaml
 # undo with: kubectl delete clusterrolebinding.rbac.authorization.k8s.io/lightweight-coscheduler
 
 # create a config-map with our scheduler config:
-kubectl create configmap scheduler-config --from-file=scheduler_config.yaml
+kubectl apply -f scheduler_config.yaml
 # check with: kubectl describe configmaps scheduler-config
 # undo with: kubectl delete configmap/scheduler-config
-
-# build/push our scheduler image
-make push
 
 # deploy the scheduler
 kubectl apply -f deployment.yaml
@@ -37,8 +34,16 @@ kubectl describe pods sayhi-default
 # cool, now delete that pod
 kubectl delete pods/sayhi-default
 
-#### Same thing on the custom scheduler.
+#### Same thing on the custom scheduler, with 2 commit.
+kubectl apply -f sayhi-custom1.yaml
+# run kubectl get pods to show that pod still pending
+kubectl apply -f sayhi-custom2.yaml
+# run kubectl get pods to show that both pods ran
+kubectl get pods
 
+# oh shit, that didn't work, redeploy the scheduler and it works
+kubectl delete deployment/lightweight-coscheduler
+kubectl apply -f deployment.yaml
 ```
 
 
